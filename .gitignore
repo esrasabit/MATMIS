@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+# Python öğrenme ve deneme dosyaları
+csv_deneme.py
+fonksiyon_deneme.py
+ilk_adim.py
+
+# Yerel test ve rapor dosyaları
+*.numbers
+*.xlsx
+!sablonlar/*.xlsx
+/*.csv
+!sablonlar/*.csv
+/abc_analiz_raporu
+urunler.py
