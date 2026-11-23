@@ -95,6 +95,13 @@ for sutun in zorunlu_sutunlar:
 if yuklenen_dosya is not None and tablo.empty:
     st.error("Stok tablosu boş. Lütfen ürün bilgilerini içeren bir dosya yükleyiniz.")
     st.stop()
+if yuklenen_dosya is not None:
+    urun_adlari = tablo["ad"].dropna()
+    tekrarlanan_adlar = urun_adlari[urun_adlari.duplicated()].unique()
+    if len(tekrarlanan_adlar) > 0:
+        st.error("Tekrarlanan ürün adları bulundu. Dosyayı düzeltip yeniden yükleyin.")
+        st.text("\n".join(map(str, tekrarlanan_adlar)))
+        st.stop()
 sayisal_sutunlar = ["stok", "birim_fiyat", "kritik_stok", "yillik_tuketim"]    
 for sutun in sayisal_sutunlar:
     if pd.to_numeric(tablo[sutun], errors="coerce").isna().any(): 
