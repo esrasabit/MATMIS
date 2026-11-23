@@ -40,30 +40,229 @@ st.markdown("""
 
 </style>
 """, unsafe_allow_html=True)
-
+st.sidebar.title("MATMIS")
+st.sidebar.subheader("Materials Management Information System")
+secim = st.sidebar.radio("Menü", ["Genel Bakış", "Stok Analizi", "Kritik Stoklar", "ABC Analizi", "Kullanım Kılavuzu"])
 zorunlu_sutunlar = ["ad", "stok", "birim_fiyat", "kritik_stok", "yillik_tuketim"]
 sablon_klasoru = Path(__file__).resolve().parent / "sablonlar"
+if secim == "Kullanım Kılavuzu":
+    st.subheader("Kullanım Kılavuzu")
+    st.write("MATMIS (Materials Management Information System), "
+    "stok verilerini analiz ederek işletmelerin envanter durumunu "
+    "değerlendirmesine yardımcı olan bir stok analiz ve raporlama uygulamasıdır. "
+    "Toplam stok değeri, kritik stok seviyeleri ve ABC analizi aracılığıyla "
+    "ürünlerin ekonomik önemini ve stok durumunu görünür hâle getirir. "
+    "Kullanıcılar kendi verilerini yükleyerek, analiz sonuçlarını inceleyebilir ve Excel formatında raporlayabilir."
+    )
+    st.markdown("### 1. Nasıl Başlanır?")
+
+    st.write(
+        "MATMIS'i kullanmaya başlamak için iki seçeneğiniz bulunmaktadır:"
+    )
+
+    st.markdown("""
+    1. **Örnek veri setiyle deneyin:** Uygulamanın sunduğu örnek
+    stok verilerini kullanarak analizleri inceleyebilirsiniz.
+
+    2. **Kendi verilerinizi yükleyin:** Stok Dosyası Yükle bölümünden
+    Excel veya CSV şablonunu indirin. Ürün bilgilerinizi şablona
+    uygun şekilde doldurarak dosyanızı uygulamaya yükleyin.
+
+    3. **Analizleri inceleyin:** Genel Bakış, Stok Analizi,
+    Kritik Stoklar ve ABC Analizi bölümlerinden sonuçları değerlendirin.
+
+    4. **Raporlarınızı indirin:**
+    - Genel Bakış bölümündeki Excel Raporunu İndir
+        butonuyla kapsamlı analiz raporunu indirebilirsiniz.
+    - Analiz sayfalarındaki tabloları sağ üst köşedeki
+        indirme simgesiyle ayrı ayrı indirebilirsiniz.
+    - ABC Analizi bölümündeki Pareto grafiğini,
+        grafiğin sağ üst köşesindeki kamera simgesini
+        kullanarak görsel (PNG) olarak indirebilirsiniz.
+    """)
+    st.markdown("### 2. Veri Dosyası Hazırlama")
+
+    st.write(
+        "MATMIS, Excel (.xlsx) ve CSV (.csv) dosyalarını destekler. "
+        "Dosyanız aşağıdaki beş zorunlu sütunu içermelidir."
+    )
+
+    st.table({
+        "Sütun": [
+            "ad",
+            "stok",
+            "birim_fiyat",
+            "kritik_stok",
+            "yillik_tuketim"
+        ],
+        "Açıklama": [
+            "Ürünün adı veya benzersiz tanımı",
+            "Mevcut stok miktarı",
+            "Ürünün birim fiyatı (TL)",
+            "Ürün için belirlenen kritik stok seviyesi",
+            "Ürünün yıllık tüketim miktarı"
+        ]
+    })
+    st.markdown("### 3. Analizlerin Yorumlanması")
+
+    with st.expander("Genel Bakış"):
+        st.write(
+        "Genel Bakış ekranı, yüklenen stok verilerinin "
+        "temel performans göstergelerini (KPI) sunar."
+    )
+
+        st.markdown("""
+    - **Toplam Stok Değeri:** Mevcut stok miktarlarının
+      birim fiyatlarla çarpılmasıyla hesaplanan toplam değerdir.
+
+    - **Kritik Ürün Sayısı:** Stok miktarı, belirlenen
+      kritik stok seviyesine eşit veya altında olan ürün sayısıdır.
+
+    - **Toplam Eksik Stok Tutarı:** Ürünlerin kritik stok
+      seviyesine ulaşması için eksik miktarların parasal karşılığıdır.
+
+    - **Toplam Ürün Sayısı:** Sistemdeki benzersiz ürün sayısıdır.
+    """)
+    with st.expander("Stok Analizi"):
+        st.write(
+        "Stok Analizi ekranı, ürünlerin stok miktarlarını, "
+        "birim fiyatlarını, stok değerlerini ve kritik stok "
+        "durumlarını ürün bazında incelemenizi sağlar."
+    )
+
+        st.markdown("""
+    - **Ürün Seçimi:** İncelemek istediğiniz ürünleri seçerek
+      stok bilgilerini filtreleyebilirsiniz.
+
+    - **Stok Değeri:** Mevcut stok miktarı ile birim fiyatın
+      çarpılmasıyla hesaplanır.
+
+    - **Eksik Miktar:** Kritik stok seviyesine ulaşmak için
+      gereken ilave ürün miktarını gösterir.
+
+    - **Eksik Tutar:** Eksik miktarın birim fiyatla
+      çarpılmasıyla hesaplanır.
+    """)
+    with st.expander("Kritik Stoklar"):
+        st.write(
+        "Kritik Stoklar ekranı, mevcut stok miktarı "
+        "belirlenen kritik stok seviyesine eşit veya "
+        "bu seviyenin altında olan ürünleri gösterir. "
+        "Bu analiz, stok yetersizliği riski taşıyan "
+        "ürünlerin belirlenmesine yardımcı olur."
+    )
+
+        st.markdown("""
+    - **Kritik Stok Seviyesi:** Ürün için önceden
+      belirlenen stok eşik değeridir.
+
+    - **Mevcut Stok:** Ürünün elde bulunan miktarıdır.
+
+    - **Eksik Miktar:** Mevcut stok ile kritik stok
+      seviyesi arasındaki pozitif farktır.
+
+    - **Eksik Stok Tutarı:** Eksik miktarın birim
+      fiyatla çarpılmasıyla hesaplanır.
+    """)
+
+        st.info(
+        "Not: Kritik stok seviyesine eşit olan ürünler de "
+        "kritik olarak sınıflandırılır. Ancak bu ürünlerin "
+        "eksik stok miktarı sıfırdır."
+    )    
+    with st.expander("ABC Analizi ve Pareto Grafiği"):
+        st.write(
+        "ABC Analizi, ürünleri yıllık tüketim değerlerine göre "
+        "ekonomik önem sırasına koyan bir stok sınıflandırma yöntemidir. "
+        "MATMIS, ürünleri A, B ve C sınıflarına ayırarak "
+        "stok yönetiminde önceliklerin belirlenmesini kolaylaştırır."
+    )
+
+        st.markdown("""
+    **Yıllık Tüketim Değeri:**
+
+    Yıllık Tüketim Miktarı × Birim Fiyat
+
+    **ABC Sınıfları:**
+
+    - **A Sınıfı:** Toplam yıllık tüketim değerinin
+      yaklaşık ilk %80'lik bölümünü oluşturan,
+      ekonomik açıdan öncelikli ürünler.
+
+    - **B Sınıfı:** Sonraki yaklaşık %15'lik
+      bölümü oluşturan ürünler.
+
+    - **C Sınıfı:** Kalan yaklaşık %5'lik
+      bölümü oluşturan ürünler.
+
+    **Pareto Grafiği:**
+
+    Ürünlerin yıllık tüketim değerine göre sıralanmasını
+    ve toplam değere kümülatif katkılarını gösterir.
+    Böylece ekonomik açıdan önemli ürünlerin
+    belirlenmesini kolaylaştırır.
+    """)
+
+        st.info(
+        "ABC sınıflandırması ürünlerin stok miktarına göre değil, "
+        "yıllık tüketim değerine göre yapılır. "
+        "Bir ürünün A sınıfında olması, mutlaka kritik stok "
+        "seviyesinde olduğu anlamına gelmez."
+    )    
+    st.markdown("### 4. Sık Karşılaşılan Hatalar")
+
+    with st.expander("Eksik sütun"):
+        st.write(
+        "Yüklenen dosyada MATMIS'in beklediği zorunlu "
+        "sütunlardan biri bulunmadığında bu hata oluşur. "
+        "Excel veya CSV şablonunu indirerek sütun adlarını "
+        "kontrol ediniz."
+    )
+
+    with st.expander("Geçersiz sayısal değer"):
+            st.write(
+        "Stok miktarı, birim fiyat, kritik stok veya yıllık "
+        "tüketim alanlarında boş ya da sayıya "
+        "dönüştürülemeyen değerler bulunduğunda bu hata oluşur. "
+        "İlgili sütundaki verileri kontrol ediniz."
+    )
+
+    with st.expander("Tekrarlanan ürün"):
+        st.write(
+        "Aynı ürün adı birden fazla satırda bulunduğunda "
+        "MATMIS hesaplamaları durdurur. "
+        "Tekrarlanan kayıtları kontrol ederek dosyayı "
+        "yeniden yükleyiniz."
+    )
+
+    with st.expander("Negatif sayısal değer"):
+        st.write(
+        "Sayısal alanlarda negatif değerler kabul edilmez. "
+        "Lütfen ilgili verileri sıfır veya pozitif "
+        "değerlerle düzeltiniz."
+    )        
+    st.stop()
 ornek_veri_alani = st.container()
 with st.expander("📂 Stok Dosyası Yükle", expanded=False):
-    st.caption(
+        st.caption(
         "Boş şablonu indirip başlıkların altına her satıra bir ürün yazın. "
         "Başlıkları ve yerlerini koruyun. CSV için virgül ayırıcı ve ondalık nokta kullanın."
     )
-    excel_sutunu, csv_sutunu = st.columns(2)
-    for sutun, etiket, uzanti, mime in (
+        excel_sutunu, csv_sutunu = st.columns(2)
+        for sutun, etiket, uzanti, mime in (
         (excel_sutunu, "Excel Şablonu İndir", "xlsx",
          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
         (csv_sutunu, "CSV Şablonu İndir", "csv", "text/csv"),
     ):
-        dosya_adi = f"matmis_stok_sablonu.{uzanti}"
-        sutun.download_button(
+            dosya_adi = f"matmis_stok_sablonu.{uzanti}"
+            sutun.download_button(
             etiket,
             data=(sablon_klasoru / dosya_adi).read_bytes(),
             file_name=dosya_adi,
             mime=mime,
             on_click="ignore",
         )
-    yuklenen_dosya = st.file_uploader("Stok Dosyanızı Yükleyiniz", type=["csv", "xlsx"])
+        yuklenen_dosya = st.file_uploader("Stok Dosyanızı Yükleyiniz", type=["csv", "xlsx"])
 if yuklenen_dosya is None:
     with ornek_veri_alani:
         if st.session_state.get("ornek_veri_acik", False):
@@ -171,9 +370,7 @@ abc_grafik.add_shape(
 abc_grafik.add_shape(
     type="line", xref="paper", yref="y2", x0=0, x1=1, y0=95, y1=95, line=dict(color="#9493F6", width=2, dash="dash")
 )
-st.sidebar.title("MATMIS")
-st.sidebar.subheader("Materials Management Information System")
-secim = st.sidebar.radio("Menü", ["Genel Bakış", "Stok Analizi", "Kritik Stoklar", "ABC Analizi"])
+
 if secim == "Genel Bakış":
     st.header("Genel Bakış")
     st.write("MATMIS, stokların ekonomik değerini ve kritik stok durumlarını analiz eden bir yönetim aracıdır.")
@@ -199,7 +396,7 @@ if secim == "Genel Bakış":
     type="primary",
     disabled=tablo.empty,
 )
-elif tablo.empty:
+elif tablo.empty and secim != "Kullanım Kılavuzu":
     st.info("Analizleri görmek için stok dosyanızı yükleyin veya örnek veri setini açın.")
 elif secim == "Stok Analizi":
     st.subheader("Stok Envanteri")
@@ -322,4 +519,3 @@ elif secim == "ABC Analizi":
         st.plotly_chart(abc_grafik)
     else:
         st.warning("Toplam yıllık tüketim değeri 0 olduğundan Pareto analizi oluşturulamadı. Ürünler varsayılan olarak C sınıfına atanmıştır.")
-    
