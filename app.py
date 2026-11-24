@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+from zipfile import BadZipFile
 from io import BytesIO
 from pathlib import Path
 from analizler import abc_analizi
@@ -281,10 +282,18 @@ else:
     print("Stok Dosyası Yüklendi")
     if yuklenen_dosya.name.endswith(".csv"):
         print("Bu bir csv dosyası")
-        tablo = pd.read_csv(yuklenen_dosya)
+        tablo = pd.read_csv(yuklenen_dosya, sep=None, engine="python")
     else:
         print("Bu bir csv dosyası degil")
+    try:
         tablo = pd.read_excel(yuklenen_dosya, header=1)
+
+    except (ValueError, OSError, ImportError, EOFError, BadZipFile):
+        st.error(
+        "Excel dosyası okunamadı. "
+        "Lütfen geçerli bir .xlsx dosyası yükleyiniz."
+    )
+        st.stop()
         print(tablo.columns.tolist())
         print(tablo.head())
 for sutun in zorunlu_sutunlar:
